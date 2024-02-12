@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float rotationSpeed = 100f;
+    public float flySpeed = 100f;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,11 +24,13 @@ public class PlayerController : MonoBehaviour
 
         //sterowanie predkoscia
         //stworz nowy wektor przesuniecia o wartosc 1 do przodu
-        Vector3 movement = Vector3.forward;
+        Vector3 movement = transform.forward;
         //pomnoz go przez czas od ostatniej klatki
         movement *= Time.deltaTime;
         //pomnoz go przez "wychylenie joysticka"
         movement *= Input.GetAxis("Vertical");
+        //pomnoz predkosc obietku
+        movement *= flySpeed;
         //dodaj ruch obiektu
         transform.position += movement;
 
