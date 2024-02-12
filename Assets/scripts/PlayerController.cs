@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public float rotationSpeed = 100f;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,5 +30,20 @@ public class PlayerController : MonoBehaviour
         movement *= Input.GetAxis("Vertical");
         //dodaj ruch obiektu
         transform.position += movement;
+
+
+        //obrot
+        //modyfikuj oœ "Y" obiektu player
+        Vector3 rotation = Vector3.up;
+        //przemnoz przez czas
+        rotation *= Time.deltaTime;
+        //przemnoz przez klawiature
+        rotation *= Input.GetAxis("Horizontal");
+        //pomnoz przez predkosc obietku
+        rotation *= rotationSpeed;
+        //dodaj obrot obiektu
+        //nie mozemy uzyc += poniewaz unity uzywa Quaterionow do zapisu rotacji
+        transform.Rotate(rotation);
+
     }
 }
