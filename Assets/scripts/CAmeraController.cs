@@ -8,6 +8,10 @@ public class CAmeraController : MonoBehaviour
     Transform player;
     //wysokosc kamery
     public float cameraHeight = 10.0f;
+    Vector3 cameraSpeed;
+    //szybkoœæ wyg³adzania ruchu kamery - dla smoothdamp
+    public float dampSpeed = 1f;
+    // Start is called before the first frame update
     // Start is called before the first frame update
     void Start()
     {
@@ -18,7 +22,7 @@ public class CAmeraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         //oblicz docelowa pozycje kamery
         Vector3 targetPosition = player.position + Vector3.up * cameraHeight;
