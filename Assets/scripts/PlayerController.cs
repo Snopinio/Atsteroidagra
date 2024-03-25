@@ -1,70 +1,96 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     public float rotationSpeed = 100f;
-    public float flySpeed = 100f;
+    public float flySpeed = 5f;
+    //odniesienie do menadzera poziomu
+    GameObject levelManagerObject;
+    //stan os³on w procentach (1=100%)
+    float shieldCapacity = 1;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        levelManagerObject = GameObject.Find("LevelManager");
     }
 
     // Update is called once per frame
     void Update()
     {
-        //dodaj do wspolrzednych wartosc x=1 y=0 z=0 pomnozone przez czas
-        //mierzony w sekundach do ostatniej klatki
+        //dodaj do wspó³rzêdnych wartoœæ x=1, y=0, z=0 pomno¿one przez czas
+        //mierzony w sekundach od ostatniej klatki
         //transform.position += new Vector3(1, 0, 0) * Time.deltaTime;
 
-        //prezeentacja dzialania wygladzonego sterowania (emulacja joysticka)
+        //prezentacja dzia³ania wyg³adzonego sterowania (emualcja joystika)
         //Debug.Log(Input.GetAxis("Vertical"));
 
-        //sterowanie predkoscia
-        //stworz nowy wektor przesuniecia o wartosc 1 do przodu
+        //sterowanie prêdkoœci¹
+        //stworz nowy wektor przesuniêcia o wartoœci 1 do przodu
         Vector3 movement = transform.forward;
-        //pomnoz go przez czas od ostatniej klatki
+        //pomnó¿ go przez czas od ostatniej klatki
         movement *= Time.deltaTime;
-        //pomnoz go przez "wychylenie joysticka"
+        //pomnó¿ go przez "wychylenie joystika"
         movement *= Input.GetAxis("Vertical");
-        //pomnoz predkosc obietku
+        //pomnó¿ przez prêdkoœæ lotu
         movement *= flySpeed;
-        //dodaj ruch obietku
+        //dodaj ruch do obiektu
         //zmiana na fizyke
-        // transform.position += movement;
+        // --- transform.position += movement;
+
         //komponent fizyki wewn¹trz gracza
         Rigidbody rb = GetComponent<Rigidbody>();
         //dodaj si³e - do przodu statku w trybie zmiany prêdkoœci
         rb.AddForce(movement, ForceMode.VelocityChange);
 
 
-
-        //obrot
+        //obrót
         //modyfikuj oœ "Y" obiektu player
         Vector3 rotation = Vector3.up;
-        //przemnoz przez czas
+        //przemnó¿ przez czas
         rotation *= Time.deltaTime;
-        //przemnoz przez klawiature
+        //przemnó¿ przez klawiaturê
         rotation *= Input.GetAxis("Horizontal");
-        //pomnoz przez predkosc obietku
+        //pomnó¿ przez prêdkoœæ obrotu
         rotation *= rotationSpeed;
-        //dodaj obrot obiektu
-        //nie mozemy uzyc += poniewaz unity uzywa Quaterionow do zapisu rotacji
+        //dodaj obrót do obiektu
+        //nie mo¿emy u¿yæ += poniewa¿ unity u¿ywa Quaternionów do zapisu rotacji
         transform.Rotate(rotation);
-
+        UpdateUI();
     }
+
+    private void UpdateUI()
+    {
+        //metoda wykonuje wszystko zwi¹zane z aktualizacj¹ interfejsu u¿ytkownika
+
+        //wyciagnij z menadzera poziomu pozycje wyjscia
+        Vector3 target = levelManagerObject.GetComponent<LevelManager>().exitPosition;
+        //obroc znacznik w strone wyjscia
+        transform.Find("NavUI").Find("TargetMarker").LookAt(target);
+        //zmien ilosc procentwo widoczna w interfejsie
+        //TODO: poprawiæ wyœwietlanie stanu os³on!
+        TextMeshPro shieldText =
+            GameObject.Find("Canvas").transform.Find("ShieldCapacityText").GetComponent<TextMeshPro>();
+        shieldText.text = " Shield: " + shieldCapacity.ToString() + "%";
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        //uruchamia sie automatycznie jesli zetkniekmy sie z innym coliderem
+        //uruchamia siê automatycznie jeœli zetkniemy sie z innym coliderem
 
-        //sprawdz czy doknelismy asteroidy
+        //sprawdz czy dotknêliœmy asteroidy
         if (collision.collider.transform.CompareTag("Asteroid"))
         {
-            Debug.Log("Boom!");
-            //pauza
-            Time.timeScale = 0;
+            //transform asteroidy
+            Transform asteroid = collision.collider.transform;
+            //policz wektor wed³ug którego odepchniemy asteroide
+            Vector3 shieldForce = asteroid.position - transform.position;
+            //popchnij asteroide
+            asteroid.GetComponent<Rigidbody>().AddForce(shieldForce * 5, ForceMode.Impulse);
+            shieldCapacity -= 0.25f;
         }
     }
 }
