@@ -14,6 +14,12 @@ public class AsteroidSpawner : MonoBehaviour
     //czas od ostatio wygenerowanej asteoidy
     float timeSinceSpawn;
 
+    //odleglosc w jakiej spawnuje sie asteroidy
+    public float spawnDistance = 10;
+
+    //odleglosc pomiedzy asteroidami
+    public float safeDistance = 10;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,14 +55,14 @@ public class AsteroidSpawner : MonoBehaviour
 
         //losowa pozycja w odleg³oœci 10 jednostek od œrodka œwiata
         //mapujemy x->x  
-        Vector3 randomPosition = new Vector3(randomCirclePosition.x, 0, randomCirclePosition.y) * 10;
+        Vector3 randomPosition = new Vector3(randomCirclePosition.x, 0, randomCirclePosition.y) * spawnDistance;
 
         //na³ó¿ pozycjê gracza - teraz mamy pozycje 10 jednostek od gracza
         randomPosition += player.position;
 
         //sprawdz czy miejsce jest wolne
         //! oznaczanie nie czyli nie ma nic w promieniu 5 jednostek od miejsca randomposition
-        if (!Physics.CheckSphere(randomPosition, 5))
+        if (!Physics.CheckSphere(randomPosition, safeDistance))
         {
             //stworz zmienn¹ asteroid, zespawnuj nowy asteroid korzystaj¹c z prefaba
             // w losowym miejscu, z rotacj¹ domyœln¹ (Quaternion.identity)

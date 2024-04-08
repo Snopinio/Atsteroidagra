@@ -9,6 +9,12 @@ public class LevelManager : MonoBehaviour
     public float levelExitDistance = 100;
     //punkt koñca poziomu
     public Vector3 exitPosition;
+    public GameObject exitPrefab;
+    //zmienna flaga oznaczajaca ukonczenie poziou
+    //zmienna flaga ukonczenie poziomu
+    public bool levelComplete = false;
+    //taka sama tylko jesli przegramy
+    public bool levelFailed = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +28,7 @@ public class LevelManager : MonoBehaviour
         //konwertujemy do Vector3
         //podstawiamy: x=x, y=0, z=y
         exitPosition = new Vector3(spawnCircle.x, 0, spawnCircle.y);
+        Instantiate(exitPrefab, exitPosition, Quaternion.identity);
     }
 
     // Update is called once per frame

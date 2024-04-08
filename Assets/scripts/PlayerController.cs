@@ -72,9 +72,19 @@ public class PlayerController : MonoBehaviour
         transform.Find("NavUI").Find("TargetMarker").LookAt(target);
         //zmien ilosc procentwo widoczna w interfejsie
         //TODO: poprawiæ wyœwietlanie stanu os³on!
-        TextMeshPro shieldText =
-            GameObject.Find("Canvas").transform.Find("ShieldCapacityText").GetComponent<TextMeshPro>();
-        shieldText.text = " Shield: " + shieldCapacity.ToString() + "%";
+        TextMeshProUGUI shieldText =
+            GameObject.Find("Canvas").transform.Find("ShieldCapacityText").GetComponent<TextMeshProUGUI>();
+            shieldText.text = " Shield: " + (shieldCapacity*100).ToString() + "%";
+
+        //sprawdzamy czy poziom sie zakonczyl i czy musimy wyswietlic koncowy ekran
+        if(levelManagerObject.GetComponent<LevelManager>().levelComplete)
+        {
+            GameObject.Find("Canvas").transform.Find("LevelCompleteScreen").gameObject.SetActive(true);
+            if (levelManagerObject.GetComponent<LevelManager>().levelFailed)
+            {
+                GameObject.Find("Canvas").transform.Find("GameOverScreen").gameObject.SetActive(true);
+            }
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -91,6 +101,22 @@ public class PlayerController : MonoBehaviour
             //popchnij asteroide
             asteroid.GetComponent<Rigidbody>().AddForce(shieldForce * 5, ForceMode.Impulse);
             shieldCapacity -= 0.25f;
+            if(shieldCapacity <= 0)
+            {
+                //poinformuj level manager, ¿e gra siê skoñczy³a bo nie mamy os³on
+                levelManagerObject.GetComponent<LevelManager>().levelFailed = true;
+            }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        //jezeli dotkniemy znacznika konca poziomu to ustaw w level menager flage,
+        //ze poziom jest ukonczony
+        if(other.transform.CompareTag("LevelExit"))
+        {
+            //z obiektu LevelMenager wyciagnij skrypt
+            levelManagerObject.GetComponent<LevelManager>().levelComplete = true;
         }
     }
 }
