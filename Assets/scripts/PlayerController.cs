@@ -74,16 +74,19 @@ public class PlayerController : MonoBehaviour
         //TODO: poprawiæ wyœwietlanie stanu os³on!
         TextMeshProUGUI shieldText =
             GameObject.Find("Canvas").transform.Find("ShieldCapacityText").GetComponent<TextMeshProUGUI>();
-            shieldText.text = " Shield: " + (shieldCapacity*100).ToString() + "%";
+        shieldText.text = " Shield: " + (shieldCapacity * 100).ToString() + "%";
 
-        //sprawdzamy czy poziom sie zakonczyl i czy musimy wyswietlic koncowy ekran
-        if(levelManagerObject.GetComponent<LevelManager>().levelComplete)
+        //sprawdzamy czy poziom siê zakoñczy³ i czy musimy wyœwietliæ ekran koñcowy
+        if (levelManagerObject.GetComponent<LevelManager>().levelComplete)
         {
+            //znajdz canvas (interfejs), znajdz w nim ekran konca poziomu i go w³¹cz
             GameObject.Find("Canvas").transform.Find("LevelCompleteScreen").gameObject.SetActive(true);
-            if (levelManagerObject.GetComponent<LevelManager>().levelFailed)
-            {
-                GameObject.Find("Canvas").transform.Find("GameOverScreen").gameObject.SetActive(true);
-            }
+        }
+        //sprawdzamy czy poziom siê zakoñczy³ i czy musimy wyœwietliæ ekran koñcowy
+        if (levelManagerObject.GetComponent<LevelManager>().levelFailed)
+        {
+            //znajdz canvas (interfejs), znajdz w nim ekran konca poziomu i go w³¹cz
+            GameObject.Find("Canvas").transform.Find("GameOverScreen").gameObject.SetActive(true);
         }
     }
 
@@ -104,7 +107,7 @@ public class PlayerController : MonoBehaviour
             if(shieldCapacity <= 0)
             {
                 //poinformuj level manager, ¿e gra siê skoñczy³a bo nie mamy os³on
-                levelManagerObject.GetComponent<LevelManager>().levelFailed = true;
+                levelManagerObject.GetComponent<LevelManager>().OnFailure();
             }
         }
     }
@@ -115,8 +118,7 @@ public class PlayerController : MonoBehaviour
         //ze poziom jest ukonczony
         if(other.transform.CompareTag("LevelExit"))
         {
-            //z obiektu LevelMenager wyciagnij skrypt
-            levelManagerObject.GetComponent<LevelManager>().levelComplete = true;
+            levelManagerObject.GetComponent <LevelManager>().OnSuccess();
         }
     }
 }
