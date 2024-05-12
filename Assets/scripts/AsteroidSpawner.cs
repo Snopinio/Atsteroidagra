@@ -20,6 +20,9 @@ public class AsteroidSpawner : MonoBehaviour
     //odleglosc pomiedzy asteroidami
     public float safeDistance = 10;
 
+    //odstep pomiedzy spawnem kolejnych asteroid
+    public float cooldown = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,15 +36,16 @@ public class AsteroidSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //dolicz czas od ostatniej klatki
-        timeSinceSpawn += Time.deltaTime;
-        //je¿eli czas przekroczy³ sekundê to spawnuj i zresetuj
-        if (timeSinceSpawn > 0.1)
+        if (timeSinceSpawn > cooldown)
         {
-            GameObject asteroid = SpawnAsteroid(staticAsteroid);
+            SpawnAsteroid(staticAsteroid);
             timeSinceSpawn = 0;
         }
+
+
         AsteroidCountControll();
+
+        timeSinceSpawn += Time.deltaTime;
     }
 
     GameObject? SpawnAsteroid(GameObject prefab)

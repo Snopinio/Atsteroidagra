@@ -1221,6 +1221,7 @@ GameObject:
   - component: {fileID: 1248698581}
   - component: {fileID: 1248698580}
   - component: {fileID: 1248698582}
+  - component: {fileID: 1248698583}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
@@ -1241,8 +1242,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   staticAsteroid: {fileID: 7529623555232898607, guid: 41272ebc122fe0448898e2b498f5aeed, type: 3}
-  spawnDistance: 10
-  safeDistance: 5
+  spawnDistance: 20
+  safeDistance: 10
+  cooldown: 0
 --- !u!4 &1248698581
 Transform:
   m_ObjectHideFlags: 0
@@ -1275,6 +1277,22 @@ MonoBehaviour:
   exitPrefab: {fileID: 9212961579178479760, guid: 133f77cb3bb27a8428a827244993771a, type: 3}
   levelComplete: 0
   levelFailed: 0
+--- !u!114 &1248698583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1248698579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9020fc591999a41b00b96a07ffcfb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  staticAsteroid: {fileID: 6891305208957574595, guid: ecd04d0d979abdf4aaa0173483e4011a, type: 3}
+  spawnDistance: 25
+  safeDistance: 5
+  cooldown: 2
 --- !u!1 &1431393018
 GameObject:
   m_ObjectHideFlags: 0
